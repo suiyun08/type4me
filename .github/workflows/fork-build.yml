@@ -18,6 +18,10 @@ on:
         description: Build and upload the signed app
         type: boolean
         default: true
+      app_version:
+        description: CFBundleShortVersionString; use the latest official release so its updates are still offered (empty keeps the script default)
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -74,6 +78,7 @@ jobs:
           VARIANT: cloud
           ARCH: arm64
           CODESIGN_IDENTITY: Type4Me Local Signing
+          APP_VERSION: ${{ inputs.app_version }}
         run: |
           APP_BUILD="$GITHUB_RUN_NUMBER" bash scripts/package-app.sh
           codesign -dvv dist/Type4Me.app 2>&1 | grep -E "^(Identifier|Authority|TeamIdentifier)="
